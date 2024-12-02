@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #1a1b3b;
+            padding: 1rem;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+                padding: 2rem;
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .api-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #6c63ff;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 12rem;
+            height: 12rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .datos-label {
+            text-transform: uppercase;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .datos-value {
+            font-size: 1.875rem;
+            font-weight: bold;
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .info-text {
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .routes-list {
+            list-style: none;
+        }
+
+        .route-item {
+            display: flex;
+            align-items: center;
+            color: #6c63ff;
+            margin-bottom: 0.75rem;
+        }
+
+        .route-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: #6c63ff;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sección Izquierda -->
+        <div class="card left-section">
+            <h1 class="api-title">API 1.0</h1>
+            <div class="logo">
+                <img src="../static/logo.jpg" alt="Consorcio Ciudad de Loja Logo">
+            </div>
+            <div class="datos">
+                <div class="datos-label">Datos</div>
+                <div class="datos-value">35000</div>
+            </div>
+        </div>
+
+        <!-- Sección Derecha -->
+        <div class="right-section">
+            <!-- Card de Información -->
+            <div class="card">
+                <h2 class="section-title">Informacion</h2>
+                
+La API actual fue desarrollada con el propósito de facilitar la configuración y el acceso a los datos del sistema de monitoreo de buses. Entre las tecnologías empleadas para su desarrollo se encuentran:
+        Flask: Framework de Python utilizado para gestionar solicitudes HTTP y realizar consultas directas a la base de datos, permitiendo la obtención eficiente de información.
+        SQLite: Base de datos ligera empleada para almacenar datos relacionados con las transacciones y el sistema de conteo.
+        HTML y CSS: Tecnologías utilizadas para la presentación y diseño de la interfaz de usuario.
+        Este conjunto de herramientas garantiza un sistema robusto y eficiente para la gestión del monitoreo de buses.
+            </div>
+
+            <!-- Card de Rutas API -->
+            <div class="card">
+                <h2 class="section-title">RUTAS DE LA API</h2>
+                <ul class="routes-list">
+                    <li class="route-item">
+                        <div class="route-dot"></div>
+                        /api/database/transactions
+                    </li>
+                    <li class="route-item">
+                        <div class="route-dot"></div>
+                        /api/database/counters
+                    </li>
+                    <li class="route-item">
+                        <div class="route-dot"></div>
+                        /api/database/errors
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
