@@ -1,5 +1,5 @@
 app.db
 ca.crt
 /__pycache__
-/database/_pycache__
+/database/__pycache__/
 credentials.json
