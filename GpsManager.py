@@ -43,7 +43,7 @@ class Gps():
             "date":fecha_actual,
             "time":hora_actual
         }
-        result = client.publish(self.topic, json.dumps(message))
+        result = client.publish(self.topic, json.dumps(message),retain=True)
         time.sleep(1)
         client.loop_stop()
         client.disconnect()
