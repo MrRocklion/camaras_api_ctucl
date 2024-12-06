@@ -7,7 +7,7 @@ from GpsManager import Gps
 import time
 app = Flask(__name__)
 stop_event = threading.Event()
-
+#/dev/ttyUSB0
 @app.route('/', methods=['GET', 'POST'])
 def home():
     result = None
@@ -52,7 +52,7 @@ def receive_gps_data():
         return jsonify({"error": "Ocurrió un error al procesar los datos"}), 500
 
 if __name__ == "__main__":
-    rs232 = rs232Comunication(stop_event=stop_event,com='COM6')
+    rs232 = rs232Comunication(stop_event=stop_event,com='/dev/ttyUSB0')
     database = SqliteManager(stop_event=stop_event,rs232=rs232)
     Firebase =  FirebaseUpload(stop_event=stop_event)
     Gps = Gps()
