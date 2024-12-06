@@ -1,20 +1,10 @@
-import paho.mqtt.client as paho
-import time
 import math
-import json
-import firebase_admin
-import uuid
-from firebase_admin import credentials,firestore
-cred = credentials.Certificate("credentials.json")
-app = firebase_admin.initialize_app(cred)
-db = firestore.client()
 
 class Gps():
     def __init__(self):
         super().__init__()
         self.central_point = [0,0]
         self.geo_radius = 3
-        self.id_bus = 'rt1505' #este parametro es importante cambiar en cada bus
     def set_gps_point(self,point):
         """
         Evalua si el bus se ha movido del sitio o se mantiene en el mismo lugar, si esta en una posicion
@@ -24,27 +14,11 @@ class Gps():
         distance = self.haversine(lat_center, lon_center, point[0], point[1])
         if distance >= self.geo_radius:
             self.central_point = point
-            self.send_data(point)
+            return True
         else:
-            pass
+            return False
     
-    def send_data(self,point):
-        """
-        Actualiza la latitud y longitud del bus con el id especificado
-        """
-        fecha_actual = time.strftime("%Y-%m-%d")
-        hora_actual = time.strftime("%H:%M:%S")
-        data = {
-            "lat":point[0],
-            "lon":point[1],
-            "date":fecha_actual,
-            "time":hora_actual
-        }
-        try:
-            db.collection("transactions").document(self.id_bus).update(data)
-        except Exception as e:
-            print(e)
-            print("falla al subir datos !")
+    
    
     def haversine(self,lat1, lon1, lat2, lon2):
         """

@@ -41,7 +41,10 @@ def receive_gps_data():
         hora_actual = time.strftime("%H:%M:%S")
         new_point = (lat,lon,fecha_actual,hora_actual,'RT-1505',0)
         database.insert_gps_point(new_point)
-        Gps.set_gps_point([float(lat),float(lon)])
+        point = [float(lat),float(lon)]
+        flag = Gps.set_gps_point(point=point)
+        if flag:
+            Firebase.update_gps_data(point=point)
         return jsonify({"message": "Datos recibidos correctamente"}), 200
     
     except Exception as e:
@@ -49,7 +52,7 @@ def receive_gps_data():
         return jsonify({"error": "Ocurrió un error al procesar los datos"}), 500
 
 if __name__ == "__main__":
-    rs232 = rs232Comunication(stop_event=stop_event,com='COM3')
+    rs232 = rs232Comunication(stop_event=stop_event,com='COM6')
     database = SqliteManager(stop_event=stop_event,rs232=rs232)
     Firebase =  FirebaseUpload(stop_event=stop_event)
     Gps = Gps()
