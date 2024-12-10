@@ -42,9 +42,9 @@ def receive_gps_data():
         new_point = (lat,lon,fecha_actual,hora_actual,'RT-1505',0)
         database.insert_gps_point(new_point)
         point = [float(lat),float(lon)]
-        flag = Gps.set_gps_point(point=point)
-        if flag:
-            Firebase.update_gps_data(point=point)
+        # flag = Gps.set_gps_point(point=point)
+        # if flag:
+        Firebase.update_gps_data(point=point)
         return jsonify({"message": "Datos recibidos correctamente"}), 200
     
     except Exception as e:
