@@ -4,9 +4,11 @@ from rs232 import rs232Comunication
 from database.SqliteManager import SqliteManager
 from FirebaseManager import FirebaseUpload
 from GpsManager import Gps
+from flask_cors import CORS
 import time
 from datetime import datetime
 app = Flask(__name__)
+CORS(app)
 stop_event = threading.Event()
 #/dev/ttyUSB0
 @app.route('/', methods=['GET', 'POST'])
