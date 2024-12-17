@@ -11,11 +11,10 @@ class SqliteManager(threading.Thread):
         self.stop_event = stop_event
         self.create_tables()
         self.aux_validation_target = 0
-        self.uuid = "799fcd19-23b6-4a00-bed8-8ccc852a4758"
-        self.place = "Parada de prueba"
-        self.lat = "0.0"
-        self.lon = "0.0"
-
+        self.uuid = "dd74f2ed-9063-4cd3-beab-6eab113d77b7"
+        self.place = "Equipo de prueba"
+        self.lat = "-3.9986764376262833"
+        self.lon = "79.20553018163444"
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
@@ -91,7 +90,13 @@ class SqliteManager(threading.Thread):
                     place TEXT NOT NULL,
                     upload INTEGER NOT NULL DEFAULT 0
                 );
-            """
+            """,
+            """CREATE TABLE IF NOT EXISTS parameters (
+                    id INTEGER PRIMARY KEY,
+                    place text NOT NULL,
+                    date timestamp INTEGER NOT NULL,
+                    uuid text NOT NULL
+            );"""
             ]
 
         try:
@@ -116,6 +121,8 @@ class SqliteManager(threading.Thread):
         try:
             with sqlite3.connect('app.db') as conn:
                 self.add_gps_point(conn, _data)
+                self.lat = _data[0]
+                self.lon = _data[1]
         except sqlite3.Error as e:
             print(e)
 
@@ -126,4 +133,42 @@ class SqliteManager(threading.Thread):
                 print(f'ID: {transaction_id}')
         except sqlite3.Error as e:
             print(e)
+
+    def currentParameters(self):
+        try:
+            with sqlite3.connect('app.db') as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT * FROM parameters ORDER BY id DESC LIMIT 1
+                ''')
+                last_register = cursor.fetchone()
+                return last_register
+        except sqlite3.Error as e:
+            print(e)
+
+    def get_parameters(self):
+        with sqlite3.connect('app.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM parameters")
+            filas = cursor.fetchall()
+            nombres_columnas = [descripcion[0] for descripcion in cursor.description]
+            resultado = [dict(zip(nombres_columnas, fila)) for fila in filas]
+            json_resultado = json.dumps(resultado, indent=4)
+            return json_resultado
+    def add_parameter(self,conn, parameter):
+        sql = ''' INSERT INTO parameters(place,date,uuid)
+                VALUES(?,?,?) '''
+        cur = conn.cursor()
+        cur.execute(sql, parameter)
+        conn.commit()
+        return cur.lastrowid
+    
+    def insert_parameter(self,_data):
+        try:
+            with sqlite3.connect('app.db') as conn:
+                parameter_id = self.add_parameter(conn, _data)
+                print(f'ID: {parameter_id}')
+        except sqlite3.Error as e:
+            print(e)
+
 

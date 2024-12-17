@@ -13,7 +13,7 @@ class FirebaseUpload(threading.Thread):
     def __init__(self, stop_event):
         super().__init__()
         self.stop_event = stop_event
-        self.id_bus = 'rt1505' #este parametro es importante cambiar en cada bus
+
     
     def run(self):
         while not self.stop_event.is_set():
@@ -48,7 +48,7 @@ class FirebaseUpload(threading.Thread):
             except sqlite3.Error as e:
                 print(f"Error al actualizar la fila: {e}")
 
-    def update_gps_data(self,point):
+    def update_gps_data(self,point,id):
         """
         Actualiza la latitud y longitud del bus con el id especificado
         """
@@ -59,7 +59,9 @@ class FirebaseUpload(threading.Thread):
             "ultima_con":current_timestamp,
         }
         try:
-            db.collection("unidades").document(self.id_bus).update(data)
+            db.collection("unidades").document(id).update(data)
         except Exception as e:
             print(e)
             print("falla al subir datos !")
+    
+    

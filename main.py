@@ -5,6 +5,7 @@ from database.SqliteManager import SqliteManager
 from FirebaseManager import FirebaseUpload
 from GpsManager import Gps
 import time
+from datetime import datetime
 app = Flask(__name__)
 stop_event = threading.Event()
 #/dev/ttyUSB0
@@ -14,10 +15,37 @@ def home():
     return render_template('home.html', result=result)
 
 
-@app.route('/api/database/transactions', methods=['GET'])
-def transactions():
-    result = None
-    return render_template('home.html', result=result)
+@app.route('/api/database', methods=['GET', 'POST'])
+def db_Api():
+    if request.method == 'GET':
+        operation = request.args.get('operation')
+        if operation == "transactions":
+            return  database.get_transactions()
+        elif operation == "last_transactions":
+            result = database.get_last_transactions()
+            print(result)
+            return  jsonify({'result':result})
+        elif operation == "parameters":
+            return database.get_parameters()
+        else:
+            return 'bad request!', 400
+    elif request.method == 'POST':
+        params = request.get_json()
+        if not params:
+            return jsonify({"error": "No se recibió JSON"}), 400
+        try:
+            date = datetime.now()
+            _data = (
+                     params['place'],date,params['uuid']
+                     )
+
+            database.uuid = params['uuid']
+            database.place = params['place']
+            database.insert_parameter(_data)
+        except:
+            return jsonify({"message": "No se recibió JSON Adecuadamente"}), 400
+        
+        return jsonify({"message": "Datos recibidos"}), 200
 
 @app.route('/api/database/counters', methods=['GET'])
 def counters():
@@ -36,15 +64,12 @@ def receive_gps_data():
             return jsonify({"error": "Datos incompletos: faltan 'lat' o 'lon'"}), 400
         if lat == 'none' or lon =='none':
             return jsonify({"error": "Datos incompletos: faltan 'lat' o 'lon'"}), 400
-        print(f"Latitud: {lat}, Longitud: {lon}")
         fecha_actual = time.strftime("%Y-%m-%d")
         hora_actual = time.strftime("%H:%M:%S")
-        new_point = (lat,lon,fecha_actual,hora_actual,'RT-1505',0)
+        new_point = (lat,lon,fecha_actual,hora_actual,database.place,0)
         database.insert_gps_point(new_point)
         point = [float(lat),float(lon)]
-        # flag = Gps.set_gps_point(point=point)
-        # if flag:
-        Firebase.update_gps_data(point=point)
+        Firebase.update_gps_data(point=point,id=database.uuid)
         return jsonify({"message": "Datos recibidos correctamente"}), 200
     
     except Exception as e:
@@ -56,6 +81,10 @@ if __name__ == "__main__":
     database = SqliteManager(stop_event=stop_event,rs232=rs232)
     Firebase =  FirebaseUpload(stop_event=stop_event)
     Gps = Gps()
+    init_params = database.currentParameters()
+    if init_params != None:
+        database.place = init_params[1]
+        database.uuid = init_params[3]
     rs232.start()
     database.start() 
     Firebase.start()
