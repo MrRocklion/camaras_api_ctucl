@@ -59,7 +59,7 @@ class FirebaseUpload(threading.Thread):
             "ultima_con":current_timestamp,
         }
         try:
-            db.collection("unidades").document(id).update(data)
+            db.collection("vehicles").document(id).update(data)
         except Exception as e:
             print(e)
             print("falla al subir datos !")

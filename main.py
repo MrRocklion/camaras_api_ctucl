@@ -10,7 +10,7 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 stop_event = threading.Event()
-#/dev/ttyUSB0
+#/dev/ttyACM0
 @app.route('/', methods=['GET', 'POST'])
 def home():
     result = None
@@ -79,7 +79,7 @@ def receive_gps_data():
         return jsonify({"error": "Ocurrió un error al procesar los datos"}), 500
 
 if __name__ == "__main__":
-    rs232 = rs232Comunication(stop_event=stop_event,com='/dev/ttyFIQ0')
+    rs232 = rs232Comunication(stop_event=stop_event,com='/dev/ttyACM0')
     database = SqliteManager(stop_event=stop_event,rs232=rs232)
     Firebase =  FirebaseUpload(stop_event=stop_event)
     Gps = Gps()
