@@ -11,7 +11,7 @@ class SqliteManager(threading.Thread):
         self.stop_event = stop_event
         self.create_tables()
         self.aux_validation_target = 0
-        self.uuid = "dd74f2ed-9063-4cd3-beab-6eab113d77b7"
+        self.uuid = "638dc13e-556c-4d4f-8146-d219a8b0b398"
         self.place = "Equipo de prueba"
         self.lat = "-3.9986764376262833"
         self.lon = "79.20553018163444"
