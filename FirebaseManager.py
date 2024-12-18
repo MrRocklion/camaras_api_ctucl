@@ -54,9 +54,9 @@ class FirebaseUpload(threading.Thread):
         """
         current_timestamp = int(time.time())
         data = {
-            "latitud":point[0],
-            "longitud":point[1],
-            "ultima_con":current_timestamp,
+            "lat":point[0],
+            "lon":point[1],
+            "last_con":current_timestamp,
         }
         try:
             db.collection("vehicles").document(id).update(data)
